@@ -234,10 +234,14 @@ function islandora_doi_datacite_generate_metadata($pid, $doi = NULL) {
     $dc_values['creator'] = array_merge($dc_values['creator'], $dc_values['contributor']);
   }
 
-  // Check for source DC elements (creator, title, publisher, date) that
+  // Check for source DC elements (creator, title, publisher, date, type) that
   // correspond to the required DataCite elements creator, title, publisher,
   // publicationYear, and resourceType, and that there is a YYYY value in date.
   $required_values = array('creator', 'title', 'publisher', 'date', 'type');
+  // Allow other modules to modify $required_values using
+  // mymodule_islandora_datacite_required_values_alter($required_values).
+  drupal_alter('islandora_datacite_required_values', $required_values);
+
   $missing_required_elements = array();
   foreach ($required_values as $value) {
     if (!isset($dc_values[$value]) || !count($dc_values[$value])) {
