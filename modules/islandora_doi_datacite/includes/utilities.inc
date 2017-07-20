@@ -214,6 +214,16 @@ function islandora_doi_datacite_update_doi($pid, $doi, $action) {
 }
 
 /**
+ * Drupal comment syntax is ridiculous
+ */
+function islandora_doi_datacite_inherit_metadata($pid, $object, $dc_values) {
+  module_load_include('module', 'islandora_solution_pack_collection', 'islandora_basic_collection');
+  $children = islandora_basic_collection_get_member_objects($object);
+  dd($children);
+}
+
+
+/**
  * Generates the DataCite metadata XML.
  *
  * @param string $pid
@@ -249,6 +259,9 @@ function islandora_doi_datacite_generate_metadata($pid, $doi = NULL) {
     }
   }
   if (count($missing_required_elements)) {
+    if (in_array("islandora:collectionCModel", $object => $models) {
+      $dc_values = islandora_doi_datacite_inherit_metadata($pid, $object, $dc_values);
+    }
     $missing_elements_string = implode(', ', $missing_required_elements);
     drupal_set_message(t("Can't assign DOI to object !pid because its DC is missing one or more required values: !values.", array('!pid' => $pid, '!values' => trim($missing_elements_string))), 'error');
     return FALSE;
